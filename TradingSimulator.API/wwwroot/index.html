@@ -1,0 +1,15 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <script src="js/signalr/dist/browser/signalr.min.js"></script>
+    <script>
+        const hub = new signalR.HubConnectionBuilder().withUrl("/rates").build();
+        hub.on("SendRates", message => console.log(message));
+        hub.start();
+    </script>
+</body>
+</html>

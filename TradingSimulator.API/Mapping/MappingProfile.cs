@@ -2,7 +2,7 @@
 using TradingSimulator.BL.Models;
 using TradingSimulator.DAL.Models;
 
-namespace TradingSimulator.BL.Mapping
+namespace TradingSimulator.API.Mapping
 {
     public class MappingProfile: Profile
     {

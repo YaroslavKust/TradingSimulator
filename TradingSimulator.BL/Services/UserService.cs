@@ -1,20 +1,48 @@
-﻿using AutoMapper;
+﻿using Microsoft.EntityFrameworkCore;
 using TradingSimulator.BL.Models;
 using TradingSimulator.DAL;
 using TradingSimulator.DAL.Models;
 
 namespace TradingSimulator.BL.Services
 {
-    public class UserService: BaseDataService
+    public class UserService: BaseDataService, IUserService
     {
         private const decimal START_BALANCE = 100000;
-        public UserService(ITradingManager manager, IMapper mapper): base(manager, mapper) { }
+        public UserService(ITradingManager manager): base(manager) { }
+
+        public async Task<bool> CheckUniqueUser(string email)
+        {
+            var user = await Manager.Users.GetByExpression(u => u.Email == email).FirstOrDefaultAsync();
+            return user != null;
+        }
 
         public async Task<UserDto> GetUserAsync(int id)
         {
             var user = await Manager.Users.Get(id);
-            var userDto = Mapper.Map<UserDto>(user);
+            var userDto = new UserDto
+            {
+                Email = user.Email,
+                Id = user.Id
+            };
             return userDto;
+        }
+
+        public async Task<UserDto> GetUserAsync(string email, string password)
+        {
+            var user = 
+                await Manager.Users.GetByExpression(u=>u.Email == email && u.Password == password).FirstOrDefaultAsync();
+            if (user != null)
+            {
+                var userDto = new UserDto
+                {
+                    Email = user.Email,
+                    Id = user.Id
+                };
+                return userDto;
+            }
+            else
+                return null;
+            
         }
 
         public async Task CreateUserAsync(string email, string password)

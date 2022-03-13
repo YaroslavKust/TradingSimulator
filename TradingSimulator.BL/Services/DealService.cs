@@ -7,7 +7,7 @@ namespace TradingSimulator.BL.Services
     {
         public async Task OpenDeal()
         {
-          
+
         }
 
         public async Task CloseDeal()

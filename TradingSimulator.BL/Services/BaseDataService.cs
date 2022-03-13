@@ -6,11 +6,9 @@ namespace TradingSimulator.BL.Services
     public abstract class BaseDataService
     {
         protected ITradingManager Manager;
-        protected IMapper Mapper;
-        public BaseDataService(ITradingManager manager, IMapper mapper)
+        public BaseDataService(ITradingManager manager)
         {
             Manager = manager;
-            Mapper = mapper;
         }
     }
 }

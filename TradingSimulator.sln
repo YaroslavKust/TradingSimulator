@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradingSimulator.API", "TradingSimulator.API\TradingSimulator.API.csproj", "{0A587010-FB96-43B9-AC85-931716EB92D9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradingSimulator.Web", "TradingSimulator.API\TradingSimulator.Web.csproj", "{0A587010-FB96-43B9-AC85-931716EB92D9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradingSimulator.DAL", "TradingSimulator.DAL\TradingSimulator.DAL.csproj", "{5AE0A3C6-4F9D-4F51-A628-C46E461E4074}"
 EndProject
