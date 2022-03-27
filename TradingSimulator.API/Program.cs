@@ -1,6 +1,7 @@
 using TradingSimulator.API;
 using TradingSimulator.API.Extensions;
 using TradingSimulator.API.Services;
+using TradingSimulator.Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -16,6 +17,7 @@ services.AddAuthorization();
 services.AddScopedServices();
 services.AddHostedService<RatesHostedService>();
 services.AddSignalR();
+services.AddSingleton<IBrokerNotifier, BrokerNotifier>();
 
 var app = builder.Build();
 

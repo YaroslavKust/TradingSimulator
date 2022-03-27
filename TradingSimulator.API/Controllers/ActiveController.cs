@@ -4,7 +4,7 @@ using TradingSimulator.DAL.Models;
 
 namespace TradingSimulator.API.Controllers
 {
-    [Route("api/Actives")]
+    [Route("api/actives")]
     [ApiController]
     public class ActiveController : ControllerBase
     {

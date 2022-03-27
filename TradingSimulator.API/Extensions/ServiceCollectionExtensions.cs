@@ -45,6 +45,7 @@ namespace TradingSimulator.API.Extensions
             services.AddScoped<ITradingManager, TradingManager>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IActiveService, ActiveService>();
+            services.AddScoped<IDealService, DealService>();
         }
 
         public static void ConfigureMapping(this IServiceCollection services)

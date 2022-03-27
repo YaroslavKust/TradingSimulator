@@ -6,7 +6,7 @@ using TradingSimulator.BL.Services;
 
 namespace TradingSimulator.API.Controllers
 {
-    [Route("api/Account")]
+    [Route("api/account")]
     [ApiController]
     public class AccountController : ControllerBase
     {

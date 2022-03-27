@@ -10,6 +10,8 @@ namespace TradingSimulator.API.Mapping
         {
             CreateMap<User, UserDto>();
             CreateMap<User, UserBalance>();
+            CreateMap<DealOpen, Deal>();
+            CreateMap<DealClose, Deal>();
         }
     }
 }

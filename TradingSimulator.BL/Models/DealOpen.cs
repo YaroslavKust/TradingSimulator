@@ -13,4 +13,3 @@ namespace TradingSimulator.BL.Models
         public int MarginMultiplier { get; set; }
     }
 }
-}

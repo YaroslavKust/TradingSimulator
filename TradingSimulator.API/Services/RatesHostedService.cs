@@ -1,15 +1,18 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using System.Net.WebSockets;
 using System.Text;
+using TradingSimulator.Web.Services;
 
 namespace TradingSimulator.API.Services
 {
     public class RatesHostedService: BackgroundService
     {
         private readonly IHubContext<RateHub> _hub;
-        public RatesHostedService(IHubContext<RateHub> hub)
+        private readonly IBrokerNotifier _brokerNotifier;
+        public RatesHostedService(IHubContext<RateHub> hub, IBrokerNotifier brokerNotifier)
         {
             _hub = hub;
+            _brokerNotifier = brokerNotifier;
         }
         protected async override Task ExecuteAsync(CancellationToken stoppingToken)
         {
@@ -32,6 +35,7 @@ namespace TradingSimulator.API.Services
                 await socket.ReceiveAsync(bytesRecieved, CancellationToken.None);
                 var response = Encoding.UTF8.GetString(bytesRecieved).Replace("\0", string.Empty);
                 await _hub.Clients.All.SendAsync("SendRates", response);
+                _brokerNotifier.Notify();
             }
 
         }
