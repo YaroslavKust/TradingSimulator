@@ -18,6 +18,7 @@ services.AddScopedServices();
 services.AddHostedService<RatesHostedService>();
 services.AddSignalR();
 services.AddSingleton<IBrokerNotifier, BrokerNotifier>();
+services.AddCors();
 
 var app = builder.Build();
 
@@ -31,6 +32,7 @@ app.UseDefaultFiles();
 app.UseStaticFiles();
 app.UseHttpsRedirection();
 app.UseRouting();
+app.UseCors(builder=>builder.AllowAnyHeader().WithOrigins("https://localhost:3000").AllowCredentials());
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseEndpoints(endpoints => endpoints.MapHub<RateHub>("/rates"));

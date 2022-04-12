@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TradingSimulator.BL.Services
+namespace TradingSimulator.Web.Services
 {
     public interface IBroker
     {
-        void Update(ObserveParameters parameters);
+        bool Update(ObserveParameters parameters);
+        bool Closed { get; set; }
     }
 }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TradingSimulator.BL.Services
+namespace TradingSimulator.Web.Services
 {
     public class ObserveParameters
     {

@@ -9,14 +9,9 @@ namespace TradingSimulator.BL.Services
 
         public async Task CreateDeal(Deal deal)
         {
-
             await Manager.Deals.Create(deal);
-
-            if(deal.Status == DealStatuses.Open)
-            {
-                await OpenDeal(deal);
-            }
         }
+
         public async Task OpenDeal(Deal deal)
         {
             var user = await Manager.Users.Get(deal.UserId);
