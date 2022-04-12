@@ -28,7 +28,6 @@ namespace TradingSimulator.API.Services
 
             await socket.SendAsync(segment, WebSocketMessageType.Text, true, CancellationToken.None);
 
-
             while (!stoppingToken.IsCancellationRequested)
             {
                 var bytesRecieved = new ArraySegment<byte>(new byte[1024]);
@@ -36,7 +35,6 @@ namespace TradingSimulator.API.Services
                 var response = Encoding.UTF8.GetString(bytesRecieved).Replace("\0", string.Empty);
                 await _hub.Clients.All.SendAsync("SendRates", response);
                 _brokerNotifier.Notify(120);
-                Console.Write("hi");
             }
 
         }
