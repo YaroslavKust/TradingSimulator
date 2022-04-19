@@ -32,10 +32,10 @@ app.UseDefaultFiles();
 app.UseStaticFiles();
 app.UseHttpsRedirection();
 app.UseRouting();
-app.UseCors(builder=>builder.AllowAnyHeader().WithOrigins("https://localhost:3000").AllowCredentials());
+app.UseCors(builder=>builder.AllowAnyHeader().WithOrigins("https://localhost:3000").AllowCredentials().AllowAnyMethod());
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseEndpoints(endpoints => endpoints.MapHub<RateHub>("/rates"));
 app.MapControllers();
-
+ 
 app.Run();

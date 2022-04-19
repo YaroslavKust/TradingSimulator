@@ -1,27 +1,42 @@
 import React, { useState, useEffect } from 'react';
 import Active from './Models/Active';
 import ActivesList from './components/ActivesList';
+import { BrowserRouter, Link, Navigate, Route, Routes } from 'react-router-dom';
+import Portfolio from './components/Portfolio';
+import Login from './components/Login';
+import Registration from './components/Registration'
+import ProtectedRoute from './components/ProtectedRoute';
+import Trading from './components/Trading';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function App(){
-    const [ actives, setActives] = useState(null);
-    const [ loaded, setLoaded ] = useState(false);
-
-    useEffect(async ()=>{
-        const response = await fetch('https://localhost:7028/api/actives');
-        const data = await response.json();
-        const results = [];
-        for(let item of data){
-            const result = new Active(item.name, item.ticket, 0, 0);
-            result.id = item.id;
-            results.push(result);
-        }
-        setActives(results);
-        setLoaded(true);
-    }, []);
     
+    const setTokenn = (token) =>{
+        localStorage.setItem("access_token",token);
+    }
+
+    const getToken = () =>{
+        return localStorage.getItem("access_token");
+    }
+
     return (
         <div>
-           {loaded ? <ActivesList actives={actives}></ActivesList> : null }
+            <BrowserRouter>
+                <p>
+                    <h2><Link to="/trading">Trading</Link></h2>
+                    <h2><Link to="/portfolio">Portfolio</Link></h2>
+                </p>
+                <Routes>
+                    <Route element={<ProtectedRoute token={getToken()}/>}>
+                        <Route path='/trading' element={<Trading/> }/>
+                        <Route path='/portfolio' element={<Portfolio/>}/>
+                    </Route>
+                    <Route path='/registration' element={<Registration/>}/>
+                    <Route path='/login' element={<Login/>}/>
+                    <Route path='/' element={getToken()? <Navigate to="/trading" replace/> : 
+                        <Navigate to={{pathname: "/login", state:{setToken: setTokenn}}} replace/>}/>
+                </Routes>
+            </BrowserRouter>
         </div>
     );
 }

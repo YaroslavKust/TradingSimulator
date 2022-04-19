@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { HubConnectionBuilder } from '@microsoft/signalr';
 import Active from '../Models/Active';
-import { act } from '@testing-library/react';
-import { ConsoleLogger } from '@microsoft/signalr/dist/esm/Utils';
 
 export default function ActivesList(props){
     const [ connection, setConnection ] = useState(null);
@@ -27,10 +25,11 @@ export default function ActivesList(props){
                     if(actives){
                         var json = JSON.parse(message).payload;
                         var new_data = [...actives];
-                        var active = new Active("Bitcoin", json.symbolName, json.ofr, json.bid);
-                        console.log(active);
-                        let index = new_data.findIndex(a => a.ticket == active.ticket);
-                        new_data[index] = active;
+                        var active = new Active("", json.symbolName, json.ofr, json.bid);
+                        let index = new_data.findIndex(a => a.ticket == json.symbolName);
+                        let item = new_data[index];
+                        item.buy_price = json.ofr;
+                        item.sell_price = json.bid;
                         setActives(new_data);
                     }        
                 });
@@ -47,8 +46,8 @@ export default function ActivesList(props){
                 <tr key = { active.id } >
                 <td> {active.name}</td>
                 <td> {active.ticket} </td>
-                <td> { active.buy_price.toFixed(2) } </td>
-                <td> { active.sell_price.toFixed(2) } </td> 
+                <td> { active.buy_price.toFixed(4) } </td>
+                <td> { active.sell_price.toFixed(4) } </td> 
                 </tr>);
         });
         return res;
