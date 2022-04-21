@@ -32,9 +32,14 @@ namespace TradingSimulator.Web.Controllers
             await _dealService.CreateDeal(dealDb);
 
             if (dealDb.Status == DealStatuses.Waiting)
-                _notifier.Attach(new Broker(_dealService, dealDb));
+                _notifier.Attach(new Broker(dealDb));
             else if (dealDb.Status == DealStatuses.Open)
+            {
                 await _dealService.OpenDeal(dealDb);
+                if(dealDb.ClosePrice > 0)
+                    _notifier.Attach(new Broker(dealDb));
+            }
+                
 
             return NoContent();
         }

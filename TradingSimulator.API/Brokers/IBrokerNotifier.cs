@@ -4,6 +4,6 @@
     {
         void Attach(IBroker observer);
         void Detach(IBroker observer);
-        void Notify(decimal price);
+        Task Notify(decimal price);
     }
 }

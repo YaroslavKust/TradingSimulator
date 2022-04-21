@@ -54,7 +54,7 @@ namespace TradingSimulator.API.Services
                 await socket.ReceiveAsync(bytesRecieved, CancellationToken.None);
                 var response = Encoding.UTF8.GetString(bytesRecieved).Replace("\0", string.Empty);
                 await _hub.Clients.All.SendAsync("SendRates", response);
-                _brokerNotifier.Notify(120);
+                await _brokerNotifier.Notify(120);
             }
 
         }

@@ -12,13 +12,13 @@ namespace TradingSimulator.Web.Services
             {
                 var dealService = scope.ServiceProvider.GetRequiredService<IDealService>();
                 var deals = dealService.GetDeals(1);
-                foreach(var deal in deals)
+
+                foreach (var deal in deals)
                 {
                     if (deal.Status == DAL.Models.DealStatuses.Close)
                         deal.Status = DAL.Models.DealStatuses.Open;
-                    _brokers.Add(new Broker(dealService, deal));
+                    _brokers.Add(new Broker(deal));
                 }
-                    
             }
         }
 
@@ -34,18 +34,22 @@ namespace TradingSimulator.Web.Services
             _brokers.Remove(broker);
         }
 
-        public void Notify(decimal price)
+        public async Task Notify(decimal price)
         {
-            foreach(var broker in _brokers.ToList())
+            using (var scope = _provider.CreateScope())
             {
-                if (broker.Closed)
+                var dealService = scope.ServiceProvider.GetRequiredService<IDealService>();
+                foreach (var broker in _brokers.ToList())
                 {
-                    _brokers.Remove(broker);
-                    continue;
-                }
+                    if (broker.Closed)
+                    {
+                        _brokers.Remove(broker);
+                        continue;
+                    }
                     
-                var parameters = new ObserveParameters { Price = price };
-                var result = broker.Update(parameters);
+                    var parameters = new ObserveParameters { Price = price };                  
+                    var result = await broker.Update(parameters, dealService);
+                }
             }
         }
     }

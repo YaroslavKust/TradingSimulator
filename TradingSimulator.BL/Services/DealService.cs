@@ -10,6 +10,7 @@ namespace TradingSimulator.BL.Services
         public async Task CreateDeal(Deal deal)
         {
             await Manager.Deals.Create(deal);
+            await Manager.SaveAsync();
         }
 
         public async Task OpenDeal(Deal deal)

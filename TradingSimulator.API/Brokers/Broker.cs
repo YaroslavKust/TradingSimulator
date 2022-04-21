@@ -6,19 +6,17 @@ namespace TradingSimulator.Web.Services
     public class Broker: IBroker
     {
         private Deal _deal;
-        private IDealService _dealService;
-        public Broker(IDealService dealService, Deal deal)
+        public Broker(Deal deal)
         {
-            _dealService = dealService;
             _deal = deal;
         }
 
-        public bool Update(ObserveParameters parameters)
+        public async Task<bool> Update(ObserveParameters parameters, IDealService dealService)
         {
             if (Around(parameters.Price, _deal.OpenPrice))
             {
-                _dealService.OpenDeal(_deal);
-                Closed = true;
+                await dealService.OpenDeal(_deal);
+                Closed = true;           
                 return true;
             }
 
@@ -26,7 +24,7 @@ namespace TradingSimulator.Web.Services
             {
                 if (_deal.Status == DealStatuses.Open)
                 {
-                    _dealService.CloseDeal(_deal);
+                    await dealService.CloseDeal(_deal);
                     Closed = true;
                     return true;
                 }                   
