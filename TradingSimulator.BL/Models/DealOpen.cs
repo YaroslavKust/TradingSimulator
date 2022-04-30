@@ -9,7 +9,10 @@ namespace TradingSimulator.BL.Models
         public decimal Count { get; set; }
         public decimal OpenPrice { get; set; }
         public decimal ClosePrice { get; set; }
+        public decimal StopLoss { get; set; }
+        public decimal TakeProfit { get; set; }
         public DealStatuses Status { get; set; }
         public int MarginMultiplier { get; set; }
+        public bool ExecutePermanently { get; set; }
     }
 }

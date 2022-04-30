@@ -2,22 +2,26 @@
 
 namespace TradingSimulator.Web.Services
 {
-    public class BrokerNotifier: IBrokerNotifier
+    public class BrokerNotifier : IBrokerNotifier
     {
         private readonly IServiceProvider _provider;
         public BrokerNotifier(IServiceProvider provider)
         {
             _provider = provider;
-            using(var scope = _provider.CreateScope())
+
+            using (var scope = _provider.CreateScope())
             {
                 var dealService = scope.ServiceProvider.GetRequiredService<IDealService>();
-                var deals = dealService.GetDeals(1);
+                var emailService = scope.ServiceProvider.GetRequiredService<IEmailService>();
+                var deals = dealService.GetDeals();
 
                 foreach (var deal in deals)
                 {
-                    if (deal.Status == DAL.Models.DealStatuses.Close)
-                        deal.Status = DAL.Models.DealStatuses.Open;
-                    _brokers.Add(new Broker(deal));
+                    if ((deal.Status == DAL.Models.DealStatuses.Waiting) ||
+                        (deal.Status == DAL.Models.DealStatuses.Open && (deal.StopLoss != 0 || deal.TakeProfit != 0)))
+                    {
+                        _brokers.Add(new Broker(emailService, deal));
+                    }
                 }
             }
         }
@@ -46,9 +50,9 @@ namespace TradingSimulator.Web.Services
                         _brokers.Remove(broker);
                         continue;
                     }
-                    
-                    var parameters = new ObserveParameters { Price = price };                  
-                    var result = await broker.Update(parameters, dealService);
+
+                    var parameters = new ObserveParameters { Price = price };
+                    await broker.Update(parameters, dealService);
                 }
             }
         }

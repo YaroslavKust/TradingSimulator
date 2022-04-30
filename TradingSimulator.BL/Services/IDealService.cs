@@ -9,5 +9,6 @@ namespace TradingSimulator.BL.Services
         Task OpenDeal(Deal deal);
         Task CloseDeal(Deal deal);
         IEnumerable<Deal> GetDeals(int userId);
+        IEnumerable<Deal> GetDeals();
     }
 }

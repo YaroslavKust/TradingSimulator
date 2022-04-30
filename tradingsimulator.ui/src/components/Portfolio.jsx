@@ -1,21 +1,10 @@
 import React, { useState, useEffect } from 'react';
 
-export default function Portfolio(){
+export default function Portfolio(props){
     const [loaded, setLoaded] = useState(false);
-    const [data, setData] =  useState(null);
     const [deals, setDeals] = useState(null);
 
     useEffect( async () => {
-        const response = await fetch('https://localhost:7028/api/account/balance', {
-            method: 'GET',
-            headers:{
-                "Authorization": "Bearer " + localStorage.getItem("access_token")
-            }
-        });
-        let res = await response.json();
-        console.log(res);
-        setData(res);
-
         const deals_response = await fetch('https://localhost:7028/api/deals', {
             method: 'GET',
             headers:{
@@ -24,19 +13,18 @@ export default function Portfolio(){
         });
 
         const deals_json = await deals_response.json();
-        console.log(deals_json);
-        setDeals(deals_json);
+        setDeals(deals_json.reverse());
         setLoaded(true);
     },[]);
 
-if(loaded)
+if(loaded){
     return(
     <div>
         <h3>Portoflio</h3>
         <div>
-            <label>Баланс: {data.balance}</label><br/>
-            <label>Кредит: {data.debt}</label><br/>
-            <label>Залог: {data.deposit}</label><br/>
+            <label>Баланс: {props.profile.balance}</label><br/>
+            <label>Кредит: {props.profile.debt}</label><br/>
+            <label>Залог: {props.profile.deposit}</label><br/>
         </div>
         <h4>Сделки</h4>
         <div>
@@ -47,13 +35,15 @@ if(loaded)
                     <th>Маржа</th>
                     <th>Цена закрытия</th>
                 </tr>
-            {deals.map((deal)=>{
+            {
+            deals.map((deal)=>{
                 return(
                     <tr>
                         <td>{deal.openPrice}</td>
                         <td>{deal.count}</td>
                         <td>{deal.marginMultiplier}</td>
-                        <td>{deal.closePrice}</td>
+                        <td>{deal.stopLoss}</td>
+                        <td>{deal.takeProfit}</td>
                     </tr>
                 )
             })}
@@ -61,6 +51,7 @@ if(loaded)
         </div>
     </div>
     )
+        }
 
 return null;
 }

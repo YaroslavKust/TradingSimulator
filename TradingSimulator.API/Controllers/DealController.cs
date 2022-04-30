@@ -14,12 +14,18 @@ namespace TradingSimulator.Web.Controllers
         private readonly IDealService _dealService;
         private readonly IMapper _mapper;
         private readonly IBrokerNotifier _notifier;
+        private readonly IEmailService _emailService;
 
-        public DealController(IDealService dealService, IMapper mapper, IBrokerNotifier notifier)
+        public DealController(
+            IDealService dealService, 
+            IMapper mapper, 
+            IBrokerNotifier notifier, 
+            IEmailService emailService)
         {
             _dealService = dealService;
             _mapper = mapper;
             _notifier = notifier;
+            _emailService = emailService;
         }
 
         [HttpPost("open")]
@@ -32,12 +38,12 @@ namespace TradingSimulator.Web.Controllers
             await _dealService.CreateDeal(dealDb);
 
             if (dealDb.Status == DealStatuses.Waiting)
-                _notifier.Attach(new Broker(dealDb));
+                _notifier.Attach(new Broker(_emailService, dealDb) { ExecuteDealPermanently = deal.ExecutePermanently });
             else if (dealDb.Status == DealStatuses.Open)
             {
                 await _dealService.OpenDeal(dealDb);
-                if(dealDb.ClosePrice > 0)
-                    _notifier.Attach(new Broker(dealDb));
+                if(dealDb.StopLoss != 0 && dealDb.TakeProfit != 0)
+                    _notifier.Attach(new Broker(_emailService, dealDb) { ExecuteDealPermanently = deal.ExecutePermanently });
             }
                 
 
@@ -59,6 +65,26 @@ namespace TradingSimulator.Web.Controllers
             var userId = int.Parse(id);
             var deals = _dealService.GetDeals(userId);
             return Ok(deals);
+        }
+
+        [HttpGet("confirm")]
+        public async Task<IActionResult> ConfirmDeal([FromQuery] string action, int dealId)
+        {
+            var deal = _dealService.GetDeals().FirstOrDefault(d => d.Id == dealId);
+
+            if (action == "open")
+            {
+                await _dealService.OpenDeal(deal);
+                return Ok("Deal successfully open!");
+            }
+
+            if (action == "close")
+            {
+                await _dealService.CloseDeal(deal);
+                return Ok("Deal successfully closed!");
+            }
+
+            return BadRequest("Action type is not recognized");
         }
     }
 }

@@ -16,6 +16,8 @@ namespace TradingSimulator.DAL.Models
         public decimal Count { get; set; }
         public decimal OpenPrice { get; set; }
         public decimal ClosePrice { get; set; }
+        public decimal StopLoss { get; set; }
+        public decimal TakeProfit { get; set; }
         public int UserId { get; set; }
         public User User { get; set; }
         public DealStatuses Status { get; set; }

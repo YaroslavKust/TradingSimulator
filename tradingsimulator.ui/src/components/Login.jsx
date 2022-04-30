@@ -7,7 +7,6 @@ export default function Login({ setToken }) {
     const navigate = useNavigate();
 
     async function loginUser(credentials) {
-      console.log('login user');
         let response = await fetch('https://localhost:7028/api/account/login', {
           method: 'POST',
           headers: {

@@ -3,9 +3,9 @@ using TradingSimulator.DAL.Models;
 
 namespace TradingSimulator.BL.Services
 {
-    public class DealService: BaseDataService, IDealService
+    public class DealService : BaseDataService, IDealService
     {
-        public DealService(ITradingManager manager): base(manager) { }
+        public DealService(ITradingManager manager) : base(manager) { }
 
         public async Task CreateDeal(Deal deal)
         {
@@ -16,6 +16,8 @@ namespace TradingSimulator.BL.Services
         public async Task OpenDeal(Deal deal)
         {
             var user = await Manager.Users.Get(deal.UserId);
+            var dealDb = await Manager.Deals.Get(deal.Id);
+            dealDb.Status = DealStatuses.Open;
 
             if (deal.MarginMultiplier > 1)
             {
@@ -35,7 +37,7 @@ namespace TradingSimulator.BL.Services
                 DealId = deal.Id
             };
             await Manager.Operations.Create(operation);
-                 
+
             user.Balance -= operation.Sum;
 
             await Manager.SaveAsync();
@@ -47,26 +49,26 @@ namespace TradingSimulator.BL.Services
             dealDb.ClosePrice = deal.ClosePrice;
             dealDb.Status = DealStatuses.Close;
 
-            var user = await Manager.Users.Get(deal.UserId);
+            var user = await Manager.Users.Get(dealDb.UserId);
 
             var operation = new Operation
             {
                 Date = DateTime.Now,
                 Type = OperationTypes.CloseDeal,
-                Sum = deal.Count * deal.ClosePrice,
-                DealId = deal.Id
+                Sum = dealDb.Count * dealDb.ClosePrice,
+                DealId = dealDb.Id
             };
             await Manager.Operations.Create(operation);
             user.Balance += operation.Sum;
 
             if (deal.Count < 0)
             {
-                await CloseDeposit(deal, user);
+                await CloseDeposit(dealDb, user);
             }
 
             if (deal.MarginMultiplier > 1)
             {
-                await CloseDebt(deal, user);
+                await CloseDebt(dealDb, user);
             }
 
             await Manager.SaveAsync();
@@ -74,11 +76,15 @@ namespace TradingSimulator.BL.Services
 
         public IEnumerable<Deal> GetDeals(int userId)
         {
-            var deals = Manager.Deals.GetByExpression(d=>d.UserId ==  userId);
+            var deals = Manager.Deals.GetByExpression(d => d.UserId == userId);
             return deals;
         }
 
-
+        public IEnumerable<Deal> GetDeals()
+        {
+            var deals = Manager.Deals.GetAll();
+            return deals;
+        }
 
         private async Task CloseDebt(Deal deal, User user)
         {
