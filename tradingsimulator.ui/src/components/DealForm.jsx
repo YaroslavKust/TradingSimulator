@@ -1,26 +1,54 @@
-import { useState } from "react";
-import { Modal, Button } from "react-bootstrap";
+import { useState, useContext, useEffect } from "react";
+import { Modal } from "react-bootstrap";
+import { TradingContext } from '../TradingContext';
+import { UserContext } from '../UserContext';
 
 export default function DealForm(props){
+    const [currPrice, setCurrPrice] = useState(props.formData.price);
+
     const[count, setCount] = useState(0);
     const[marginMultiplier, setMargin] = useState(1);
     const[openPrice, setOpenPrice] = useState(0);
     const[stopLoss, setStopLoss] = useState(0);
     const[takeProfit, setTakeProfit] = useState(0);
-    const[processPemanent, setProcessPremanent] = useState(true);
+    const[executePermanently, setExecutePermanently] = useState(true);
+
+    const [actives, setActives] = useContext(TradingContext);
+    const updateUserData = useContext(UserContext);
 
     const handleClose = props.handleClose;
     const show = props.show;
 
+    useEffect(()=>{
+            if(props.formData.ticket != ""){
+                let price = 0;
+                let active = actives.find(a => a.ticket == props.formData.ticket);
+                if(props.formData.side == "buy"){
+                    price = active.buy_price;
+                }     
+                else{
+                    price = active.sell_price;
+                }
+                if(price != currPrice){
+                    setCurrPrice(price);
+                }
+            }
+    },[actives]);
+
     const sendDeal = async () =>{
+        let dealValue = count;
+        if(props.formData.side == "sell"){
+            dealValue *= -1;
+        }
+
         const credentials = {
-            activeId: 1,
-            count,
+            activeId: props.formData.activeId,
+            count: dealValue,
             marginMultiplier,
-            openPrice: 100,
+            openPrice: openPrice == 0 ? currPrice : openPrice,
             stopLoss,
             takeProfit,
-            processPemanent,
+            executePermanently,
             status: 0
         }
 
@@ -32,16 +60,27 @@ export default function DealForm(props){
           },
           body: JSON.stringify(credentials)
         });
-
+        await updateUserData();
         handleClose();
+    }
+
+    const handleSubmit = (e) =>{
+        e.preventDefault();
+        sendDeal();
+    }
+
+    const handleCheckBox = () =>{
+        setExecutePermanently(!executePermanently);
     }
 
     return(
         <Modal show={show} onHide={handleClose}>
-            <Modal.Header closeButton>
-                <Modal.Title>Открыть сделку {props.active}</Modal.Title>
+            <Modal.Header closeButton className='deal-form'>
+                <Modal.Title>{props.formData.side == "buy" ? "Покупка" : "Продажа"} {props.formData.ticket}  {currPrice.toFixed(4)}</Modal.Title>
             </Modal.Header>
-            <Modal.Body>
+            <Modal.Body className='deal-form'>
+                <div className='form-wrapper'>
+                <form onSubmit={handleSubmit} className='deal-form__inner'>
                 <label>Количество</label><br/>
                 <input type="number" onChange={e => setCount(e.target.value)}></input>
                 <br/>
@@ -61,11 +100,17 @@ export default function DealForm(props){
                 <br/>
                 <label>Тейк-профит</label><br/>
                 <input type="number" onChange={e => setTakeProfit(e.target.value)}></input>
+                <br/>
+                <input type="checkbox" checked={executePermanently} onChange={handleCheckBox} className='checkbox'/>
+                <label>Автоматическое совершение сделки </label>
+                <br></br><br></br>
+                <button type="submit" 
+                    className={
+                        props.formData.side == "buy" ? "button submit-deal-button button-green" : "button submit-deal-button button-red"}>
+                    {props.formData.side == "buy" ? "Купить" : "Продать"}
+                </button>
+                </form>
+                </div>
             </Modal.Body>
-            <Modal.Footer>
-                <Button variant="primary" onClick={sendDeal}>
-                    Save Changes
-                </Button>
-            </Modal.Footer>
         </Modal>)
 }

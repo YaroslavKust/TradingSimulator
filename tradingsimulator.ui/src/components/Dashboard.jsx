@@ -9,10 +9,11 @@ export default function Dashboard(props){
     
     return (
         <div>
-        <p>
-            <h2><Link to="/trading">Trading</Link></h2>
-            <h2><Link to="/portfolio">Portfolio</Link></h2>
-        </p>
+        <div className='dashboard-header'>
+            <h2 className='dashboard-header__item'><Link to="/trading">Торговля</Link></h2>
+            <h2 className='dashboard-header__item'><Link to="/portfolio">Портфель</Link></h2>
+            <h2 className='dashboard-header__item-exit'><Link to="/logout">Выход</Link></h2>
+        </div>
             {props.children}
         </div>
     );

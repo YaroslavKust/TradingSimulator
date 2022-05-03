@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function Login({ setToken }) {
+export default function Login({ setLoggedIn }) {
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
     const navigate = useNavigate();
@@ -17,12 +17,12 @@ export default function Login({ setToken }) {
         return await response.json();
     }
 
-    const handleSubmit = (e) =>{
+    const handleSubmit = async (e) =>{
         e.preventDefault();
-        loginUser({email, password}).then(response=>{
-            localStorage.setItem("access_token",response.token);
-          });
-          navigate("/trading");
+        let response = await loginUser({email, password});
+        localStorage.setItem("access_token",response.token);
+        setLoggedIn();
+        navigate("/trading");
         }
 
     return(

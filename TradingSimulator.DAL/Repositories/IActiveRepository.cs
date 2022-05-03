@@ -9,5 +9,6 @@ namespace TradingSimulator.DAL.Repositories
 {
     public interface IActiveRepository: IRepository<Active>
     {
+        void UpdateActives(IEnumerable<Active> actives);
     }
 }

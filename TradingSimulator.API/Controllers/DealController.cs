@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TradingSimulator.BL.Models;
 using TradingSimulator.BL.Services;
 using TradingSimulator.DAL.Models;
+using TradingSimulator.Web.Models;
 using TradingSimulator.Web.Services;
 
 namespace TradingSimulator.Web.Controllers
@@ -42,7 +44,7 @@ namespace TradingSimulator.Web.Controllers
             else if (dealDb.Status == DealStatuses.Open)
             {
                 await _dealService.OpenDeal(dealDb);
-                if(dealDb.StopLoss != 0 && dealDb.TakeProfit != 0)
+                if(dealDb.StopLoss != 0 || dealDb.TakeProfit != 0)
                     _notifier.Attach(new Broker(_emailService, dealDb) { ExecuteDealPermanently = deal.ExecutePermanently });
             }
                 
@@ -64,7 +66,8 @@ namespace TradingSimulator.Web.Controllers
             var id = HttpContext.User.FindFirst("id").Value;
             var userId = int.Parse(id);
             var deals = _dealService.GetDeals(userId);
-            return Ok(deals);
+            var dealsDto = _mapper.Map<IEnumerable<Deal>, IEnumerable<DealDto>>(deals);
+            return Ok(dealsDto);
         }
 
         [HttpGet("confirm")]
@@ -85,6 +88,20 @@ namespace TradingSimulator.Web.Controllers
             }
 
             return BadRequest("Action type is not recognized");
+        }
+
+        [HttpGet("statistic")]
+        public IActionResult GetDealsStatistic()
+       {
+            var id = HttpContext.User.FindFirst("id").Value;
+            var userId = int.Parse(id);
+
+            var deals = _dealService.GetDeals(userId).Where(d=>d.Status != DealStatuses.Close)
+                .GroupBy(d=>d.Active.Type.ToString())
+                .Select(g=> new {Type = g.Key, 
+                    Sum = g.Sum(d=>d.Count*(d.Count > 0 ? d.Active.LastBid : d.Active.LastAsk))});
+
+            return Ok(deals);
         }
     }
 }

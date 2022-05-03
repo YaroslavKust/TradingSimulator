@@ -10,5 +10,10 @@ namespace TradingSimulator.DAL.Repositories
     public class ActiveRepository: Repository<Active>, IActiveRepository
     {
         public ActiveRepository(TradingContext context) : base(context) { }
+
+        public void UpdateActives(IEnumerable<Active> actives)
+        {
+            Context.Actives.UpdateRange(actives);
+        }
     }
 }

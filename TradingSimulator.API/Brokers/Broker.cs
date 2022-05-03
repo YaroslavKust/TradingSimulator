@@ -1,5 +1,6 @@
 ﻿using TradingSimulator.DAL.Models;
 using TradingSimulator.BL.Services;
+using TradingSimulator.Web.Models;
 
 namespace TradingSimulator.Web.Services
 {
@@ -15,10 +16,24 @@ namespace TradingSimulator.Web.Services
             _deal = deal;
         }
 
-        public async Task<bool> Update(ObserveParameters parameters, IDealService dealService)
+        public async Task<bool> Update(RateInfo rateInfo, IDealService dealService)
         {
-            if (Around(parameters.Price, _deal.OpenPrice))
+            if(_deal.Active.Ticket != rateInfo.SymbolName)
             {
+                return false;
+            }
+
+            if (Around(rateInfo.Bid, _deal.OpenPrice) && _deal.Status == DealStatuses.Waiting)
+            {
+                if(_deal.Count > 0)
+                {
+                    _deal.OpenPrice = rateInfo.Bid;
+                }
+                else
+                {
+                    _deal.OpenPrice = rateInfo.Ofr;
+                }
+
                 if (ExecuteDealPermanently)
                 {
                     await dealService.OpenDeal(_deal);
@@ -36,8 +51,8 @@ namespace TradingSimulator.Web.Services
 
             }
 
-            var stopLossDerived = Around(parameters.Price, _deal.StopLoss);
-            var takeProfitDerived = Around(parameters.Price, _deal.TakeProfit);
+            var stopLossDerived = _deal.Count > 0 ? Around(rateInfo.Ofr, _deal.StopLoss) : Around(rateInfo.Bid, _deal.StopLoss);
+            var takeProfitDerived = _deal.Count > 0 ? Around(rateInfo.Ofr, _deal.TakeProfit) : Around(rateInfo.Bid, _deal.TakeProfit);
 
             if (stopLossDerived || takeProfitDerived)
             {

@@ -27,5 +27,11 @@ namespace TradingSimulator.BL.Services
             }
             return types;
         }
+
+        public async Task Update(IEnumerable<Active> actives)
+        {
+            Manager.Actives.UpdateActives(actives);
+            await Manager.SaveAsync();
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using TradingSimulator.BL.Services;
+using TradingSimulator.Web.Models;
 
 namespace TradingSimulator.Web.Services
 {
@@ -38,7 +39,7 @@ namespace TradingSimulator.Web.Services
             _brokers.Remove(broker);
         }
 
-        public async Task Notify(decimal price)
+        public async Task Notify(RateInfo rateInfo)
         {
             using (var scope = _provider.CreateScope())
             {
@@ -51,8 +52,7 @@ namespace TradingSimulator.Web.Services
                         continue;
                     }
 
-                    var parameters = new ObserveParameters { Price = price };
-                    await broker.Update(parameters, dealService);
+                    await broker.Update(rateInfo, dealService);
                 }
             }
         }

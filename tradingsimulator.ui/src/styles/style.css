@@ -1,0 +1,86 @@
+body {
+    color: lightgray;
+    background-color: #212529;
+}
+
+.dashboard-header {
+    display: flex;
+    background-color: black;
+}
+
+.dashboard-header a {
+    font-weight: 600;
+}
+
+a {
+    color: lightgray;
+    text-decoration: none;
+}
+
+a:hover {
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.dashboard-header__item-exit {
+    margin: 10px 10px 10px auto;
+}
+
+.dashboard-header__item {
+    margin: 10px;
+}
+
+.app {
+    background-color: #212529;
+}
+
+.button {
+    border-width: 0;
+    border-radius: 5px;
+    color: lightgray;
+    padding: 5px;
+}
+
+.submit-deal-button {
+    width: 100%;
+}
+
+.button-blue {
+    background-color: blue;
+}
+
+.button-blue:hover {
+    background-color: darkblue;
+}
+
+.button-red {
+    background-color: rgb(207, 28, 28);
+}
+
+.button-red:hover {
+    background-color: red;
+}
+
+.button-green {
+    background-color: green;
+}
+
+.button-green:hover {
+    background-color: limegreen;
+}
+
+.deal-form {
+    background-color: #212529;
+}
+
+.form-wrapper {
+    display: flex;
+}
+
+.deal-form__inner {
+    margin: auto;
+}
+
+.checkbox {
+    margin-right: 5px;
+}

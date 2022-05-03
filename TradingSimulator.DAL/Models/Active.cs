@@ -19,5 +19,7 @@ namespace TradingSimulator.DAL.Models
         public string Name { get; set; }
         public string Ticket { get; set; }
         public ActiveTypes Type { get; set; }
+        public decimal LastBid { get; set; }
+        public decimal LastAsk { get; set; }
     }
 }

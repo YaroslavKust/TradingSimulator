@@ -1,9 +1,6 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { HubConnectionBuilder } from '@microsoft/signalr';
-import Active from '../Models/Active';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { TradingContext } from '../TradingContext';
-import { Button } from 'bootstrap';
 
 export default function ActivesList(props){
     const [actives, setActives] = useContext(TradingContext);
@@ -18,9 +15,21 @@ export default function ActivesList(props){
                 <td><Link to={`/chart/${ticketName}`}>{active.name}</Link></td>
                 <td> {active.ticket} </td>
                 <td> { active.buy_price.toFixed(4) } </td>
-                <td><button>Купить</button></td>
+                <td>
+                    <button 
+                        onClick={()=>props.openDeal(active.ticket, active.buy_price, "buy", active.id)}
+                        className='button button-green'
+                    >Купить
+                    </button>
+                </td>
                 <td> { active.sell_price.toFixed(4) } </td> 
-                <td><button>Продать</button></td>
+                <td>
+                    <button 
+                        onClick={()=>props.openDeal(active.ticket, active.sell_price, "sell", active.id)}
+                        className='button button-red'
+                        >Продать
+                    </button>
+                </td>
                 </tr>);
         });
         return res;
@@ -28,7 +37,7 @@ export default function ActivesList(props){
     
     return (
         <div>    
-            <table className = 'table table-striped' aria-labelledby = "tabelLabel">
+            <table className = 'table table-striped table-dark' aria-labelledby = "tabelLabel">
             <thead>
             <tr>
             <th> Name </th>  

@@ -61,12 +61,12 @@ namespace TradingSimulator.BL.Services
             await Manager.Operations.Create(operation);
             user.Balance += operation.Sum;
 
-            if (deal.Count < 0)
+            if (dealDb.Count < 0)
             {
                 await CloseDeposit(dealDb, user);
             }
 
-            if (deal.MarginMultiplier > 1)
+            if (dealDb.MarginMultiplier > 1)
             {
                 await CloseDebt(dealDb, user);
             }
@@ -92,7 +92,7 @@ namespace TradingSimulator.BL.Services
             {
                 Date = DateTime.Now,
                 Type = OperationTypes.CloseDebt,
-                Sum = (deal.Count * deal.OpenPrice) * (1 - 1 / deal.MarginMultiplier)
+                Sum = (deal.Count * deal.OpenPrice) * (decimal)(1.0 - 1.0 / deal.MarginMultiplier)
             };
 
             await Manager.Operations.Create(operationDebt);
@@ -107,7 +107,7 @@ namespace TradingSimulator.BL.Services
             {
                 Date = DateTime.Now,
                 Type = OperationTypes.OPenDebt,
-                Sum = (deal.Count * deal.OpenPrice) * (1 - 1 / deal.MarginMultiplier),
+                Sum = (deal.Count * deal.OpenPrice) * (decimal)(1.0 - 1.0 / deal.MarginMultiplier),
                 DealId = deal.Id
             };
 

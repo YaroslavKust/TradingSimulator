@@ -1,11 +1,30 @@
+using Quartz;
 using TradingSimulator.API;
 using TradingSimulator.API.Extensions;
 using TradingSimulator.API.Services;
 using TradingSimulator.Web.Services;
+using TradingSimulator.Web.Sheduling;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 var services = builder.Services;
+
+services.AddQuartz(q =>
+{
+    q.UseMicrosoftDependencyInjectionJobFactory();
+
+    var updateRatesJobKey = new JobKey("UpdateRatesJob");
+    q.AddJob<UpdateRatesJob>(opts => opts.WithIdentity(updateRatesJobKey));
+    q.AddTrigger(opts => opts
+        .ForJob(updateRatesJobKey)
+        .WithIdentity("UpdateRatesJob-trigger")
+        .WithSimpleSchedule(x => x
+            .WithIntervalInMinutes(5)
+            .RepeatForever()));
+});
+
+builder.Services.AddQuartzHostedService(
+    q => q.WaitForJobsToComplete = true);
 
 services.AddControllers();
 services.AddEndpointsApiExplorer();

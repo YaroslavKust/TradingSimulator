@@ -1,6 +1,5 @@
 import React, {useState} from "react";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react/cjs/react.production.min";
 
 export default function Registration() {
     const [email, setEmail] = useState();
@@ -25,7 +24,8 @@ export default function Registration() {
         return response.status;
     }
 
-    const handleSubmit = async () =>{
+    const handleSubmit = async (e) =>{
+      e.preventDefault();
         console.log("a");
         if(password == confirmedPassword){
             console.log("hi");

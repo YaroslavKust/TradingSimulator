@@ -11,17 +11,17 @@ namespace TradingSimulator.DAL.Repositories
         {
             Context = context;
         }
-        public IQueryable<T> GetAll()
+        public virtual IQueryable<T> GetAll()
         {
            return Context.Set<T>();
         }
 
-        public async Task<T> Get(int id)
+        public virtual async Task<T> Get(int id)
         {
             return await Context.Set<T>().FindAsync(id);
         }
 
-        public IQueryable<T> GetByExpression(Expression<Func<T, bool>> expression)
+        public virtual IQueryable<T> GetByExpression(Expression<Func<T, bool>> expression)
         {
             return Context.Set<T>().Where(expression);
         }

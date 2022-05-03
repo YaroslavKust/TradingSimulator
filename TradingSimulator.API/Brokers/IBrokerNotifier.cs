@@ -1,9 +1,11 @@
-﻿namespace TradingSimulator.Web.Services
+﻿using TradingSimulator.Web.Models;
+
+namespace TradingSimulator.Web.Services
 {
     public interface IBrokerNotifier
     {
         void Attach(IBroker observer);
         void Detach(IBroker observer);
-        Task Notify(decimal price);
+        Task Notify(RateInfo rateInfo);
     }
 }

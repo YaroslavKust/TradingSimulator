@@ -7,5 +7,6 @@ namespace TradingSimulator.BL.Services
         IEnumerable<Active> GetActives();
         Task<IEnumerable<Active>> GetActives(string[] types);
         List<string> GetActiveTypes();
+        Task Update(IEnumerable<Active> actives);
     }
 }

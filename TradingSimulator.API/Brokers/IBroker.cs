@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TradingSimulator.BL.Services;
+﻿using TradingSimulator.BL.Services;
+using TradingSimulator.Web.Models;
 
 namespace TradingSimulator.Web.Services
 {
     public interface IBroker
     {
-        Task<bool> Update(ObserveParameters parameters, IDealService dealService);
+        Task<bool> Update(RateInfo rateInfo, IDealService dealService);
         bool Closed { get; set; }
     }
 }
