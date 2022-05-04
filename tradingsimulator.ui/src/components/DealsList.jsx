@@ -11,25 +11,30 @@ export default function DealsList(props){
     const updateUserData = useContext(UserContext);
     const[connection, setConnection] = useState(null);
 
-    useEffect( async () => {
-        const resp = await fetch('https://localhost:7028/api/actives');
-        const data = await resp.json();
-        const results = [];
-        for(let item of data){
-            const result = new Active(item.name, item.ticket, item.lastAsk, item.lastBid);
-            result.id = item.id;
-            results.push(result);
+    useEffect(() => {
+        let newConnection;
+        const fetchData = async () =>{
+            const resp = await fetch('https://localhost:7028/api/actives');
+            const data = await resp.json();
+            const results = [];
+            for(let item of data){
+                const result = new Active(item.name, item.ticket, item.lastAsk, item.lastBid);
+                result.id = item.id;
+                results.push(result);
+            }
+            setActives(results);
+
+            newConnection = new HubConnectionBuilder()
+            .withUrl('https://localhost:7028/rates')
+            .withAutomaticReconnect()
+            .build();
+            setConnection(newConnection);
+            setLoaded(true);
         }
-        setActives(results);
+        
+        fetchData().catch(console.error);
 
-        const newConnection = new HubConnectionBuilder()
-        .withUrl('https://localhost:7028/rates')
-        .withAutomaticReconnect()
-        .build();
-        setConnection(newConnection);
-        console.log("a");
-
-        setLoaded(true);       
+        return ()=> newConnection.stop();
     },[]);
 
     useEffect(async () => {

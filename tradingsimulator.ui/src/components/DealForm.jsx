@@ -61,6 +61,12 @@ export default function DealForm(props){
           body: JSON.stringify(credentials)
         });
         await updateUserData();
+        setCount(0);
+        setMargin(1);
+        setStopLoss(0);
+        setTakeProfit(0);
+        setOpenPrice(0);
+        setExecutePermanently(true);
         handleClose();
     }
 
@@ -82,10 +88,10 @@ export default function DealForm(props){
                 <div className='form-wrapper'>
                 <form onSubmit={handleSubmit} className='deal-form__inner'>
                 <label>Количество</label><br/>
-                <input type="number" onChange={e => setCount(e.target.value)}></input>
+                <input type="number" step="0.0001" className="deal-from__input" onChange={e => setCount(e.target.value)}></input>
                 <br/>
                 <label>Маржа</label><br/>
-                <select onChange={e => setMargin(e.target.value)}>
+                <select onChange={e => setMargin(e.target.value)} className="deal-from__input">
                     <option value={1}>x1</option>
                     <option value={2}>x2</option>
                     <option value={5}>x5</option>
@@ -93,13 +99,13 @@ export default function DealForm(props){
                 </select>
                 <br/>
                 <label>Открыть сделку по цене</label><br/>
-                <input type="number" onChange={e => setOpenPrice(e.target.value)}></input>
+                <input type="number" step="0.0001" className="deal-from__input" onChange={e => setOpenPrice(e.target.value)}></input>
                 <br/>
                 <label>Стоп-лосс</label><br/>
-                <input type="number" onChange={e => setStopLoss(e.target.value)}></input>
+                <input type="number" step="0.0001" className="deal-from__input" onChange={e => setStopLoss(e.target.value)}></input>
                 <br/>
                 <label>Тейк-профит</label><br/>
-                <input type="number" onChange={e => setTakeProfit(e.target.value)}></input>
+                <input type="number" step="0.0001" className="deal-from__input" onChange={e => setTakeProfit(e.target.value)}></input>
                 <br/>
                 <input type="checkbox" checked={executePermanently} onChange={handleCheckBox} className='checkbox'/>
                 <label>Автоматическое совершение сделки </label>

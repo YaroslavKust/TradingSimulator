@@ -8,8 +8,8 @@ namespace TradingSimulator.Web.Controllers
     [ApiController]
     public class ChartController : ControllerBase
     {
-        [HttpGet("{symbol}")]
-        public async Task<IActionResult> GetChartData(string symbol)
+        [HttpGet("{symbol}/{interval}")]
+        public async Task<IActionResult> GetChartData(string symbol, string interval)
         {
             string result = "";
             using (var client = new HttpClient())
@@ -17,7 +17,9 @@ namespace TradingSimulator.Web.Controllers
                 client.BaseAddress = new Uri("https://marketcap.backend.currency.com/");
                 client.DefaultRequestHeaders.Accept.Clear();
 
-                HttpResponseMessage response = await client.GetAsync($"api/v1/token_crypto/OHLC?symbol={symbol}");
+                HttpResponseMessage response = await client.
+                    GetAsync($"api/v1/token_crypto/OHLC?symbol={symbol}&interval={interval}");
+
                 if (response.IsSuccessStatusCode)
                 {
                     result = await response.Content.ReadAsStringAsync();
@@ -28,6 +30,6 @@ namespace TradingSimulator.Web.Controllers
                 }
             }
             return Ok(result);
-        } 
+        }
     }
 }

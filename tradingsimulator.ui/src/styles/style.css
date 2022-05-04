@@ -84,3 +84,7 @@ a:hover {
 .checkbox {
     margin-right: 5px;
 }
+
+.deal-from__input {
+    width: 100%;
+}

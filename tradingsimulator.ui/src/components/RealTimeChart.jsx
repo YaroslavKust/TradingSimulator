@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState } from "react";
 import Chart from "react-google-charts";
 import { HubConnectionBuilder } from '@microsoft/signalr';
 
@@ -16,10 +16,18 @@ export default function RealTimeChart(props){
       width: '100%',
       height: '600',
       chartArea: {width: '90%', height: '85%'},
-      legend: { position: 'bottom' }
+      legend: { position: 'bottom' },
+      backgroundColor: { fill: '#212529' },
+        colors: ['red'],
+        hAxis: {
+            textStyle:{color: '#FFF'}
+          },
+          vAxis: {
+            textStyle:{color: '#FFF'}
+          }
     };
 
-    useEffect( async () => {
+    useEffect(() => {
       const newConnection = new HubConnectionBuilder()
       .withUrl('https://localhost:7028/rates')
       .withAutomaticReconnect()
@@ -29,6 +37,8 @@ export default function RealTimeChart(props){
       res.unshift(["time","price"]);
       setChartData(res);
       setLoaded(true); 
+
+      return ()=> newConnection.stop();
   },[]);
 
   useEffect(async () => {
@@ -42,7 +52,6 @@ export default function RealTimeChart(props){
                     new_data.ticket = json.symbolName;
                     new_data.buy_price = json.ofr;
                     new_data.sell_price = json.bid;
-                    console.log(new_data);
                     setActive(new_data);        
               });
           }

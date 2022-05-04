@@ -14,7 +14,7 @@ export default function ActivesList(props){
                 <tr key = { active.id } >
                 <td><Link to={`/chart/${ticketName}`}>{active.name}</Link></td>
                 <td> {active.ticket} </td>
-                <td> { active.buy_price.toFixed(4) } </td>
+                <td style={{color: active.buy_color}}> { active.buy_price.toFixed(4) } </td>
                 <td>
                     <button 
                         onClick={()=>props.openDeal(active.ticket, active.buy_price, "buy", active.id)}
@@ -22,7 +22,7 @@ export default function ActivesList(props){
                     >Купить
                     </button>
                 </td>
-                <td> { active.sell_price.toFixed(4) } </td> 
+                <td style={{color: active.sell_color}}> { active.sell_price.toFixed(4) } </td>
                 <td>
                     <button 
                         onClick={()=>props.openDeal(active.ticket, active.sell_price, "sell", active.id)}

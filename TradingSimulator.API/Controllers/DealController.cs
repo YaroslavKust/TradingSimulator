@@ -65,7 +65,7 @@ namespace TradingSimulator.Web.Controllers
         {
             var id = HttpContext.User.FindFirst("id").Value;
             var userId = int.Parse(id);
-            var deals = _dealService.GetDeals(userId);
+            var deals = _dealService.GetDeals(userId).Where(d=>d.Status != DealStatuses.Close);
             var dealsDto = _mapper.Map<IEnumerable<Deal>, IEnumerable<DealDto>>(deals);
             return Ok(dealsDto);
         }
@@ -96,10 +96,10 @@ namespace TradingSimulator.Web.Controllers
             var id = HttpContext.User.FindFirst("id").Value;
             var userId = int.Parse(id);
 
-            var deals = _dealService.GetDeals(userId).Where(d=>d.Status != DealStatuses.Close)
+            var deals = _dealService.GetDeals(userId).Where(d=>d.Status == DealStatuses.Open)
                 .GroupBy(d=>d.Active.Type.ToString())
                 .Select(g=> new {Type = g.Key, 
-                    Sum = g.Sum(d=>d.Count*(d.Count > 0 ? d.Active.LastBid : d.Active.LastAsk))});
+                    Sum = g.Sum(d=>d.Count*(d.Count > 0 ? d.Active.LastBid : d.Active.LastAsk * -1))});
 
             return Ok(deals);
         }

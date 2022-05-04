@@ -25,25 +25,31 @@ export default function Trading(props){
         setShow(true);
     }
 
-    useEffect( async () => {
-        const resp = await fetch('https://localhost:7028/api/actives');
-        const data = await resp.json();
-        const results = [];
-        for(let item of data){
-            const result = new Active(item.name, item.ticket, item.lastAsk, item.lastBid);
-            result.id = item.id;
-            results.push(result);
+    useEffect(() => {
+        let newConnection;
+        const fetchData = async () =>{
+            const resp = await fetch('https://localhost:7028/api/actives');
+            const data = await resp.json();
+            const results = [];
+            for(let item of data){
+                const result = new Active(item.name, item.ticket, item.lastAsk, item.lastBid);
+                result.buy_color = 'white';
+                result.sell_color = 'white';
+                result.id = item.id;
+                results.push(result);
+            }
+            setActives(results);
+            newConnection = new HubConnectionBuilder()
+            .withUrl('https://localhost:7028/rates')
+            .withAutomaticReconnect()
+            .build();
+            setConnection(newConnection);
+            setLoaded(true);
         }
-        setActives(results);
 
-        const newConnection = new HubConnectionBuilder()
-        .withUrl('https://localhost:7028/rates')
-        .withAutomaticReconnect()
-        .build();
-        setConnection(newConnection);
-        console.log("a");
+        fetchData().catch(console.error);
 
-        setLoaded(true);       
+        return ()=> newConnection.stop();
     },[]);
 
     useEffect(async () => {
@@ -55,8 +61,9 @@ export default function Trading(props){
                     if(actives){
                         const json = JSON.parse(message).payload;
                         const new_data = [...actives];
-                        let index = new_data.findIndex(a => a.ticket == json.symbolName);
-                        let item = new_data[index];
+                        let item = new_data.find(a => a.ticket == json.symbolName);
+                        item.buy_color = item.buy_price > json.ofr ? 'red' : 'green';
+                        item.sell_color = item.sell_price > json.bid ? 'red' : 'green';
                         item.buy_price = json.ofr;
                         item.sell_price = json.bid;
                         setActives(new_data);

@@ -8,6 +8,14 @@ export default function Portfolio(props){
     const [deals, setDeals] = useState(null);
     const [statistic, setStatistic] = useState(null);
 
+    const chartOptions = {
+        legend: {textStyle: {color: "#FFF", fontSize: 16}},
+        pieHole: 0.4,
+        height: "100%", 
+        chartArea: {width: '90%', height: '90%'},
+        backgroundColor: { fill:'transparent' },
+    }
+
     const updateDeals = async () =>{
         const deals_response = await fetch('https://localhost:7028/api/deals', {
             method: 'GET',
@@ -18,8 +26,6 @@ export default function Portfolio(props){
 
         const deals_json = await deals_response.json();
         setDeals(deals_json.reverse());
-
-        console.log("deals updated");
         setDealsLoaded(true);
     }
 
@@ -44,27 +50,22 @@ export default function Portfolio(props){
     if(loaded && dealsLoaded){
         return(
         <div>
-            <h3>Portoflio</h3>
             <div style={{display: "flex"}}>
                 <div>
-                    <label>Баланс: {props.profile.balance}</label><br/>
-                    <label>Кредит: {props.profile.debt}</label><br/>
-                    <label>Залог: {props.profile.deposit}</label><br/>
+                    <h3>Финансы</h3>
+                    <h5>Баланс: {props.profile.balance}</h5>
+                    <h5>Кредит: {props.profile.debt}</h5>
+                    <h5>Залог: {props.profile.deposit}</h5>
                 </div>
-                <div style={{height: 300}}>
-                    <Chart 
-                        chartType='PieChart' 
-                        options={
-                            {pieHole: 0.6, 
-                                height: "100%", 
-                                chartArea: {width: '90%', height: '100%'},
-                                backgroundColor: { fill:'transparent' },
-                                annotations: {
-                                    textStyle:{color: '#FFF'}
-                                  }
-                            }} 
-                        data={statistic}
-                        />
+                <div>
+                    <h3 style={{textAlign: 'center'}}>Активы</h3>
+                    <div style={{height: 350, width: 600}}>
+                        <Chart 
+                            chartType='PieChart' 
+                            options={chartOptions} 
+                            data={statistic}
+                            />
+                    </div>
                 </div>
             </div>
             <h4>Сделки</h4>
