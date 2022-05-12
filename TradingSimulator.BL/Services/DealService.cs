@@ -38,6 +38,7 @@ namespace TradingSimulator.BL.Services
             };
             await Manager.Operations.Create(operation);
 
+            dealDb.OpenTime = operation.Date;
             user.Balance -= operation.Sum;
 
             await Manager.SaveAsync();
@@ -45,7 +46,7 @@ namespace TradingSimulator.BL.Services
 
         public async Task CloseDeal(Deal deal)
         {
-            var dealDb = await Manager.Deals.Get(deal.Id);
+             var dealDb = await Manager.Deals.Get(deal.Id);
             dealDb.ClosePrice = deal.ClosePrice;
             dealDb.Status = DealStatuses.Close;
 
@@ -59,6 +60,8 @@ namespace TradingSimulator.BL.Services
                 DealId = dealDb.Id
             };
             await Manager.Operations.Create(operation);
+
+            dealDb.CloseTime = operation.Date;
             user.Balance += operation.Sum;
 
             if (dealDb.Count < 0)
@@ -106,7 +109,7 @@ namespace TradingSimulator.BL.Services
             var operationDebt = new Operation
             {
                 Date = DateTime.Now,
-                Type = OperationTypes.OPenDebt,
+                Type = OperationTypes.OpenDebt,
                 Sum = (deal.Count * deal.OpenPrice) * (decimal)(1.0 - 1.0 / deal.MarginMultiplier),
                 DealId = deal.Id
             };

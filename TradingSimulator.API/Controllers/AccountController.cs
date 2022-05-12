@@ -55,5 +55,16 @@ namespace TradingSimulator.API.Controllers
                 return NotFound();
             return Ok(balance);
         }
+
+        [Authorize]
+        [HttpGet("income/{period}")]
+        public async Task<IActionResult> GetIncome(string period)
+        {
+            var id = HttpContext.User.FindFirst("id").Value;
+            var userId = int.Parse(id);
+
+            var income = _userService.GetIncomes(period, userId);
+            return Ok(income);
+        }
     }
 }

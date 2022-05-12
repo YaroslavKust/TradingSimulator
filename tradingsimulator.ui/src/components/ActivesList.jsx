@@ -37,14 +37,14 @@ export default function ActivesList(props){
     
     return (
         <div>    
-            <table className = 'table table-striped table-dark' aria-labelledby = "tabelLabel">
+            <table className = 'table table-striped' aria-labelledby = "tabelLabel">
             <thead>
             <tr>
-            <th> Name </th>  
-            <th> Ticket </th>
-            <th> Buy </th>
+            <th> Имя </th>  
+            <th> Тикер </th>
+            <th> Покупка </th>
             <th></th>
-            <th> Sell </th>
+            <th> Продажа </th>
             <th></th>
             </tr> 
             </thead>

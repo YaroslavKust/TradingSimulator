@@ -12,19 +12,11 @@ export default function RealTimeChart(props){
     
     const options = {
       title: ticket,
-      curveType: 'function',
       width: '100%',
       height: '600',
       chartArea: {width: '90%', height: '85%'},
       legend: { position: 'bottom' },
-      backgroundColor: { fill: '#212529' },
-        colors: ['red'],
-        hAxis: {
-            textStyle:{color: '#FFF'}
-          },
-          vAxis: {
-            textStyle:{color: '#FFF'}
-          }
+        colors: ['blue','red'],
     };
 
     useEffect(() => {
@@ -34,7 +26,7 @@ export default function RealTimeChart(props){
       .build();
       setConnection(newConnection);
       const res = [];
-      res.unshift(["time","price"]);
+      res.unshift(["Время","Покупа","Продажа"]);
       setChartData(res);
       setLoaded(true); 
 
@@ -67,7 +59,7 @@ export default function RealTimeChart(props){
 
         if(chartData[chartData.length - 1][1] !== new_data.buy_price && new_data.ticket == ticket){
           const new_arr = [...chartData];
-          const chart_item = [new Date(), new_data.buy_price];
+          const chart_item = [new Date(), new_data.buy_price, new_data.sell_price];
           new_arr.push(chart_item);
 
           if(new_arr.length > 100){

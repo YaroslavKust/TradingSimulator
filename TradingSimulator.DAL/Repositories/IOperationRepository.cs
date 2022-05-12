@@ -9,5 +9,6 @@ namespace TradingSimulator.DAL.Repositories
 {
     public interface IOperationRepository: IRepository<Operation>
     {
+        IEnumerable<Operation> GetWithDeals(int userId);
     }
 }

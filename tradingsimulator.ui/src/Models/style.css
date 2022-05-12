@@ -1,16 +1,19 @@
+body {
+    color: lightgray;
+    background-color: #212529;
+}
+
 .dashboard-header {
     display: flex;
-    background-color: midnightblue;
+    background-color: black;
 }
 
 .dashboard-header a {
     font-weight: 600;
-    color: floralwhite;
 }
 
 a {
-    color: black;
-    font-weight: 500;
+    color: lightgray;
     text-decoration: none;
 }
 
@@ -28,14 +31,14 @@ a:hover {
 }
 
 .app {
-    background-color: ivory;
+    background-color: #212529;
 }
 
 .button {
     border-width: 0;
     border-radius: 5px;
-    color: white;
-    padding: 8px;
+    color: lightgray;
+    padding: 5px;
 }
 
 .submit-deal-button {
@@ -66,6 +69,10 @@ a:hover {
     background-color: limegreen;
 }
 
+.deal-form {
+    background-color: #212529;
+}
+
 .form-wrapper {
     display: flex;
 }
@@ -80,40 +87,4 @@ a:hover {
 
 .deal-from__input {
     width: 100%;
-}
-
-.login-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 40vh
-}
-
-.login {
-    margin: auto;
-    width: 300px;
-}
-
-.account-button-conatiner {
-    display: flex;
-    margin-top: 10px;
-    justify-content: space-between;
-}
-
-.button-login {
-    width: 40%;
-}
-
-.button-register {
-    width: 55%;
-}
-
-.statistic-container {
-    border-left: 2px solid dimgray;
-    border-right: 2px solid dimgray;
-    margin-top: 10px;
-}
-
-.fin-head {
-    font-weight: 600;
 }

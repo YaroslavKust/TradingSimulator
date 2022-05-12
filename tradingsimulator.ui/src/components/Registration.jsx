@@ -36,22 +36,19 @@ export default function Registration() {
     }
 
     return(
-      <form onSubmit={handleSubmit}>
-        <label>
-          <p>Email</p>
-          <input type="text" onChange={e => setEmail(e.target.value)} required/>
-        </label>
-        <label>
-          <p>Password</p>
-          <input type="password" onChange={e => setPassword(e.target.value)} required/>
-        </label>
-        <label>
-          <p>Confirm password</p>
-          <input type="password" onChange={e => setConfirmedPassword(e.target.value)} required/>
-        </label>
-        <div>
-          <button type="submit">Submit</button>
+      <div className="login-container">
+      <form onSubmit={handleSubmit} className="login">
+        <h2>Регистрация</h2>
+          <label>Email</label><br/>
+          <input type="text" onChange={e => setEmail(e.target.value)} required className="deal-from__input"/><br/>
+          <label>Пароль</label><br/>
+          <input type="password" onChange={e => setPassword(e.target.value)} required className="deal-from__input"/><br/>
+          <label>Повторите пароль</label><br/>
+          <input type="password" onChange={e => setConfirmedPassword(e.target.value)} required className="deal-from__input"/><br/>
+        <div className="account-button-conatiner">
+          <button type="submit" className="button button-green">Зарегистрироваться</button>
         </div>
       </form>
+      </div>
     )
 }

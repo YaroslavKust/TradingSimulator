@@ -15,14 +15,7 @@ export default function HistoricalChart(props){
         height: '600',
         chartArea: {width: '90%', height: '85%'},
         legend: { position: 'bottom' },
-        backgroundColor: { fill: '#212529' },
         colors: ['blue'],
-        hAxis: {
-            textStyle:{color: '#FFF'}
-          },
-          vAxis: {
-            textStyle:{color: '#FFF'}
-          } 
       };
   
       const candlesOptions = {
@@ -35,13 +28,6 @@ export default function HistoricalChart(props){
           height: '600',
           chartArea: {width: '90%', height: '85%'},
           legend: "none",
-          hAxis: {
-            textStyle:{color: '#FFF'}
-          },
-          vAxis: {
-            textStyle:{color: '#FFF'}
-          },
-          backgroundColor: { fill: '#212529' },
       }
 
       const [options, setOptions] = useState(lineOptions);
@@ -94,10 +80,11 @@ export default function HistoricalChart(props){
                 parseFloat(data[4]), 
                 parseFloat(data[2])];
             });
-            res.unshift(["time","","","",""]);
+            
             if(res.length > 201){
-                res = res.slice(0,201);
+                res = res.slice(res.length - 200);
             }
+            res.unshift(["time","","","",""]);
             setOptions(candlesOptions);
 
         }

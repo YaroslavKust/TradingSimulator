@@ -5,7 +5,7 @@
         Refill,
         OpenDeal,
         CloseDeal,
-        OPenDebt,
+        OpenDebt,
         CloseDebt,
         OpenDeposit,
         CloseDeposit

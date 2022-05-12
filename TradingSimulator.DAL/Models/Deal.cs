@@ -22,5 +22,7 @@ namespace TradingSimulator.DAL.Models
         public User User { get; set; }
         public DealStatuses Status { get; set; }
         public int MarginMultiplier { get; set; }
+        public DateTime? OpenTime { get; set; }
+        public DateTime? CloseTime { get; set; }
     }
 }

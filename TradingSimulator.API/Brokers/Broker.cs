@@ -25,7 +25,9 @@ namespace TradingSimulator.Web.Services
 
             if (Around(rateInfo.Bid, _deal.OpenPrice) && _deal.Status == DealStatuses.Waiting)
             {
-                if(_deal.Count > 0)
+                var side = _deal.Count > 0 ? "лонг" : "шорт";
+
+                if (_deal.Count > 0)
                 {
                     _deal.OpenPrice = rateInfo.Bid;
                 }
@@ -38,12 +40,16 @@ namespace TradingSimulator.Web.Services
                 {
                     await dealService.OpenDeal(_deal);
                     Closed = true;
-                    _emailService.SendNotification("a", "b", "Deal was opened");
+                    
+                    var message = $"Была открыта {side} сделка: {_deal.Count} {_deal.Active.Ticket} по цене {_deal.OpenPrice}$, маржа={_deal.MarginMultiplier}";
+                    _emailService.SendNotification("a", "b", message);
                     return true;
                 }
                 else
                 {
-                    _emailService.SendConfirmation("a", "b", "You can open deal",
+                    var message = $"Вы можете открыть {side} сделку: {_deal.Count} {_deal.Active.Ticket} по цене {_deal.OpenPrice}$, маржа={_deal.MarginMultiplier}";
+
+                    _emailService.SendConfirmation("a", "b", message,
                         $"https://localhost:7028/api/deals/confirm?action=open&dealId={_deal.Id}");
                     Closed = true;
                     return true;
@@ -56,19 +62,23 @@ namespace TradingSimulator.Web.Services
 
             if (stopLossDerived || takeProfitDerived)
             {
+                var side = _deal.Count > 0 ? "лонг" : "шорт";
+
                 if (_deal.Status == DealStatuses.Open)
                 {
                     if (ExecuteDealPermanently)
                     {
+                        var message = $"Была закрыта {side} сделка: {_deal.Count} {_deal.Active.Ticket} по цене {_deal.OpenPrice}$, маржа={_deal.MarginMultiplier}";
                         _deal.ClosePrice = stopLossDerived ? _deal.StopLoss : _deal.TakeProfit;
                         await dealService.CloseDeal(_deal);
                         Closed = true;
-                        _emailService.SendNotification("a", "b", "Deal was closed");
+                        _emailService.SendNotification("a", "b", message);
                         return true;
                     }
                     else
                     {
-                        _emailService.SendConfirmation("a", "b", "You can close deal",
+                        var message = $"Вы можете закрыть {side} сделку: {_deal.Count} {_deal.Active.Ticket} по цене {_deal.OpenPrice}$, маржа={_deal.MarginMultiplier}";
+                        _emailService.SendConfirmation("a", "b", message,
                         $"https://localhost:7028/api/deals/confirm?action=close&dealId={_deal.Id}");
                         Closed = true;
                         return true;

@@ -75,7 +75,7 @@ export default function DealsList(props){
     }
 
     return(loaded ? <div>
-        <table className = 'table table-striped table-dark' aria-labelledby = "tabelLabel">
+        <table className = 'table table-striped' aria-labelledby = "tabelLabel">
             <thead>
             <tr id={0}>
                 <th>Тикер</th>

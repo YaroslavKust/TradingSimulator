@@ -76,5 +76,56 @@ namespace TradingSimulator.BL.Services
             Manager.Users.UpdateUser(user);
             await Manager.SaveAsync();
         }
+
+        public TradingStatistic GetIncomes(string period, int userId)
+        {
+            DateTime beginDate, endDate = DateTime.Now;
+
+            switch (period)
+            {
+                case "day":
+                    beginDate = DateTime.Now.Date;
+                    break;
+                case "week":
+                    beginDate = DateTime.Now.AddDays(-7);
+                    break;
+                default:
+                    return null;
+            }
+
+            var deals = Manager.Deals.GetByExpression(d=>d.UserId == userId).ToList().Where(d => 
+            d.UserId == userId && 
+            d.Status == DealStatuses.Close &&
+            d.CloseTime >= beginDate && 
+            d.CloseTime <= endDate);
+
+            var incomes = deals.Select(d => CalculateIncome(d)).Sum();
+            var totalSpend = deals.Select(d => d.OpenPrice * Math.Abs(d.Count)).Sum();
+            var incomePercents = incomes / totalSpend * 100;
+
+            var sucessesAndFails = deals
+                .GroupBy(d => CalculateIncome(d) > 0)
+                .Select(g=> new {Key = g.Key, Value = g.Count()});
+
+            var successes = sucessesAndFails.FirstOrDefault(x => x.Key == true)?.Value;
+            var fails = sucessesAndFails.FirstOrDefault(x => x.Key == false)?.Value;
+
+            var statistic = new TradingStatistic()
+            {
+                DealsCount = deals.Count(),
+                DealsSuccessed = successes ??= 0,
+                DealsFailed = fails ??= 0,
+                Income = incomes,
+                IncomePercents = incomePercents,
+            };
+
+            return statistic;
+        }
+
+        private decimal CalculateIncome(Deal deal)
+        {
+            var difference = (deal.ClosePrice - deal.OpenPrice) * deal.Count;
+            return difference;
+        }
     }
 }

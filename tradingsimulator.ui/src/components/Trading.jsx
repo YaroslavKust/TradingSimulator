@@ -33,8 +33,8 @@ export default function Trading(props){
             const results = [];
             for(let item of data){
                 const result = new Active(item.name, item.ticket, item.lastAsk, item.lastBid);
-                result.buy_color = 'white';
-                result.sell_color = 'white';
+                result.buy_color = 'black';
+                result.sell_color = 'black';
                 result.id = item.id;
                 results.push(result);
             }

@@ -25,19 +25,24 @@ export default function Login({ setLoggedIn }) {
         navigate("/trading");
         }
 
+    const handleRegisterRedirect = (e) =>{
+      e.preventDefault();
+      navigate("/registration");
+    }
+
     return(
-      <form onSubmit={handleSubmit}>
-        <label>
-          <p>Email</p>
-          <input type="text" onChange={e => setEmail(e.target.value)} required/>
-        </label>
-        <label>
-          <p>Password</p>
-          <input type="password" onChange={e => setPassword(e.target.value)} required/>
-        </label>
-        <div>
-          <button type="submit">Submit</button>
+      <div className="login-container">
+      <form onSubmit={handleSubmit} className="login">
+          <h2>Вход в систему</h2>
+          <label>Email</label><br/>
+          <input type="text" onChange={e => setEmail(e.target.value)} required className="deal-from__input"/><br/>
+          <label>Пароль</label><br/>
+          <input type="password" onChange={e => setPassword(e.target.value)} required className="deal-from__input"/>
+        <div className="account-button-conatiner">
+          <button type="submit" className="button button-blue button-login">Вход</button>
+          <button className="button button-green button-register" onClick={handleRegisterRedirect}>Регистрация</button>
         </div>
       </form>
+      </div>
     )
 }

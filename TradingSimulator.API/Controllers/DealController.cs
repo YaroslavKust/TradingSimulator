@@ -92,7 +92,7 @@ namespace TradingSimulator.Web.Controllers
 
         [HttpGet("statistic")]
         public IActionResult GetDealsStatistic()
-       {
+        {
             var id = HttpContext.User.FindFirst("id").Value;
             var userId = int.Parse(id);
 
@@ -101,6 +101,16 @@ namespace TradingSimulator.Web.Controllers
                 .Select(g=> new {Type = g.Key, 
                     Sum = g.Sum(d=>d.Count*(d.Count > 0 ? d.Active.LastBid : d.Active.LastAsk * -1))});
 
+            return Ok(deals);
+        }
+
+        [HttpGet("historical")]
+        public IActionResult GetHistoricalDeals()
+        {
+            var id = HttpContext.User.FindFirst("id").Value;
+            var userId = int.Parse(id);
+
+            var deals = _dealService.GetDeals(userId).Where(d => d.Status == DealStatuses.Close);
             return Ok(deals);
         }
     }

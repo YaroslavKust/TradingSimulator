@@ -15,5 +15,6 @@ namespace TradingSimulator.BL.Services
         Task CreateUserAsync(string email, string password);
         Task<UserBalance> GetUserBalanceAsync(int id);
         Task SetBalance(int userId, int sum);
+        TradingStatistic GetIncomes(string period, int userId);
     }
 }
