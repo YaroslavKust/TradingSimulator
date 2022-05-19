@@ -40,6 +40,8 @@ export default function CloseDealsList(){
         {
         deals.map((deal)=>{
                 const diff = ((deal.closePrice - deal.openPrice)*deal.count).toFixed(4);
+                const priceColor = diff > 0 ? 'green' : 'red';
+
                 return(
                     <tr id={deal.id}>
                         <td>{deal.active.ticket}</td>
@@ -49,9 +51,9 @@ export default function CloseDealsList(){
                         <td>x{deal.marginMultiplier}</td>
                         <td>{deal.stopLoss}</td>
                         <td>{deal.takeProfit}</td>
-                        <td>{deal.closePrice}</td>
-                        <td>{diff}</td>
-                        <td>{(diff/(deal.openPrice*Math.abs(deal.count))*100).toFixed(4)}%</td>
+                        <td style={{color: priceColor}}>{deal.closePrice}</td>
+                        <td style={{color: priceColor}}>{diff}</td>
+                        <td style={{color: priceColor}}>{(diff/(deal.openPrice*Math.abs(deal.count))*100).toFixed(4)}%</td>
                     </tr>
                 )})}
         </tbody>

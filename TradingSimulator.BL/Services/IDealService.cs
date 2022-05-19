@@ -5,6 +5,7 @@ namespace TradingSimulator.BL.Services
 {
     public interface IDealService
     {
+        Task Save(Deal deal);
         Task CreateDeal(Deal deal);
         Task OpenDeal(Deal deal);
         Task CloseDeal(Deal deal);

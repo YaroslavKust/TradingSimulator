@@ -1,6 +1,9 @@
 .dashboard-header {
     display: flex;
     background-color: midnightblue;
+    position: sticky;
+    top: 0px;
+    z-index: 1000;
 }
 
 .dashboard-header a {
@@ -28,7 +31,7 @@ a:hover {
 }
 
 .app {
-    background-color: ivory;
+    background-color: white;
 }
 
 .button {
@@ -116,4 +119,25 @@ a:hover {
 
 .fin-head {
     font-weight: 600;
+}
+
+.chart-header-text {
+    font-size: 30pt;
+}
+
+.chart-header-subtext {
+    font-size: 16pt;
+}
+
+.chart-header-item {
+    margin: 10px;
+}
+
+.chart-header {
+    display: flex;
+    border-bottom: 1px solid dimgray;
+}
+
+.text-gray {
+    color: gray;
 }

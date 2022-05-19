@@ -95,6 +95,7 @@ export default function DealsList(props){
         deals.map((deal)=>{
             if(actives){
                 const closePrice = deal.closePrice == 0 ? actives.find(a=>a.ticket == deal.active.ticket).buy_price : deal.closePrice;
+                const priceColor = closePrice*deal.count > deal.openPrice*deal.count ? 'green' : 'red';
                 return(
                     <tr id={deal.id}>
                         <td>{deal.active.ticket}</td>
@@ -104,7 +105,7 @@ export default function DealsList(props){
                         <td>x{deal.marginMultiplier}</td>
                         <td>{deal.stopLoss}</td>
                         <td>{deal.takeProfit}</td>
-                        <td>{closePrice.toFixed(4)}</td>
+                        <td style={{color: priceColor}}>{closePrice.toFixed(4)}</td>
                         <td>{deal.status}</td>
                         <td><button 
                             onClick={()=>CloseDeal(deal.id, closePrice)} disabled={deal.status == "Close"}

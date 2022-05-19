@@ -48,7 +48,7 @@ export default function HistoricalChart(props){
           return [new Date(data[0] * 1000), parseFloat(data[4])];
       });
 
-      res.unshift(["time","price"]);
+      res.unshift(["time","Цена"]);
       setChartData(res);
       setLoaded(true);
     },[]);
@@ -61,7 +61,7 @@ export default function HistoricalChart(props){
             ticketName = ticketName.replace('/',"%2F");
         }
 
-        const response = await fetch(`https://localhost:7028/api/Chart/${ticketName}/${props.period}`);
+        const response = await fetch(`https://localhost:7028/api/actives/historical/${ticketName}/${props.period}`);
         const dataRes = await response.json();
         const resArray = dataRes.result[ticket];
 
@@ -69,7 +69,7 @@ export default function HistoricalChart(props){
             res = resArray.map(data=>{
                 return [new Date(data[0] * 1000), parseFloat(data[4])];
             });
-            res.unshift(["time","price"]);
+            res.unshift(["time","Цена"]);
             setOptions(lineOptions);
         }
         else{

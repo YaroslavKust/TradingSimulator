@@ -67,17 +67,19 @@ namespace TradingSimulator.Web.Services
                 if (_deal.Status == DealStatuses.Open)
                 {
                     if (ExecuteDealPermanently)
-                    {
-                        var message = $"Была закрыта {side} сделка: {_deal.Count} {_deal.Active.Ticket} по цене {_deal.OpenPrice}$, маржа={_deal.MarginMultiplier}";
+                    { 
                         _deal.ClosePrice = stopLossDerived ? _deal.StopLoss : _deal.TakeProfit;
                         await dealService.CloseDeal(_deal);
+                        var message = $"Была закрыта {side} сделка: {_deal.Count} {_deal.Active.Ticket} по цене {_deal.ClosePrice}$, маржа={_deal.MarginMultiplier}";
                         Closed = true;
                         _emailService.SendNotification("a", "b", message);
                         return true;
                     }
                     else
                     {
-                        var message = $"Вы можете закрыть {side} сделку: {_deal.Count} {_deal.Active.Ticket} по цене {_deal.OpenPrice}$, маржа={_deal.MarginMultiplier}";
+                        _deal.ClosePrice = stopLossDerived ? _deal.StopLoss : _deal.TakeProfit;
+                        await dealService.Save(_deal);
+                        var message = $"Вы можете закрыть {side} сделку: {_deal.Count} {_deal.Active.Ticket} по цене {_deal.ClosePrice}$, маржа={_deal.MarginMultiplier}";
                         _emailService.SendConfirmation("a", "b", message,
                         $"https://localhost:7028/api/deals/confirm?action=close&dealId={_deal.Id}");
                         Closed = true;

@@ -11,6 +11,7 @@ import Dashboard from './components/Dashboard';
 import ChartPage from './components/Chart';
 import {UserContext} from './UserContext';
 import Logout from './components/Logout';
+import OperationsList from './components/Operations';
 
 export default function App(){
     const[userData, setUserData] = useState();
@@ -57,6 +58,7 @@ export default function App(){
                         <Route element={<Dashboard><ProtectedRoute loggedIn={loggedIn}/></Dashboard>}>
                             <Route path='/trading' element={<Trading loaded={loaded}/> }/>
                             <Route path='/portfolio' element={<Portfolio profile={userData} loaded={loaded}/>}/>
+                            <Route path='/operations' element={<OperationsList loaded={loaded}/> }/>
                             <Route path='/chart/:ticket' element={<ChartPage />}/>
                         </Route>
                         <Route path='/registration' element={<Registration/>}/>

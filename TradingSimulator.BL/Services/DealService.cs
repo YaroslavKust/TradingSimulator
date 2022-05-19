@@ -7,6 +7,13 @@ namespace TradingSimulator.BL.Services
     {
         public DealService(ITradingManager manager) : base(manager) { }
 
+        public async Task Save(Deal deal)
+        {
+            var dealDb = await Manager.Deals.Get(deal.Id);
+            dealDb.ClosePrice = deal.ClosePrice;
+            await Manager.SaveAsync();
+        }
+
         public async Task CreateDeal(Deal deal)
         {
             await Manager.Deals.Create(deal);

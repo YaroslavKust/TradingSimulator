@@ -50,7 +50,22 @@ export default function Portfolio(props){
         const income_json = await income_response.json();
         const stat_json = await statistic_response.json();
         let arr = stat_json.map(stat=>{
-            return [stat.type, stat.sum];
+            let type;
+            switch(stat.type){
+                case "Crypto":
+                    type = "Крипто";
+                    break;
+                case "Share":
+                    type = "Акции";
+                    break;
+                case "Commodity":
+                    type = "Сырье";
+                    break;
+                case "Index":
+                    type = "Индекс";
+                    break;
+            }
+            return [type, stat.sum];
         });
         arr.unshift(["active type","sum"]);
         setStatistic(arr);
